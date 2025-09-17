@@ -14,6 +14,33 @@
 //
 // ============================================================================
 
+
+/*
+  territorios.c
+  Programa simples para cadastrar 5 territórios (estrutura Territorio)
+  - Cada Territorio possui: nome (até 29 chars), cor (até 9 chars) e tropas (int)
+  - Após o cadastro dos 5 territórios, o programa exibe todos os dados.
+  - Comentários explicam criação da struct, leitura e exibição.
+*/
+
+#include <stdio.h>
+#include <string.h>
+
+#define NUM_TERRITORIOS 5
+
+// --- Definição da struct Território:
+
+typedef struct {
+    char nome[30];
+    char cor[10];
+    int tropas;
+} Territorio;
+
+// --- Função buffer
+void limpar_buffer_stdin(void) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) { /* descarta */ }
+}
 // Inclusão das bibliotecas padrão necessárias para entrada/saída, alocação de memória, manipulação de strings e tempo.
 
 // --- Constantes Globais ---
@@ -21,6 +48,59 @@
 
 // --- Estrutura de Dados ---
 // Define a estrutura para um território, contendo seu nome, a cor do exército que o domina e o número de tropas.
+
+int main(void) {
+    Territorio lista[NUM_TERRITORIOS];
+
+    printf("=== Cadastro de %d Territórios ===\n\n", NUM_TERRITORIOS);
+
+    /* Laço de entrada: pede nome, cor e tropas para cada território */
+    for (int i = 0; i < NUM_TERRITORIOS; i++) {
+        printf("Território %d:\n", i + 1);
+
+        /* Lê o nome (permite espaços). O formato " %29[^\n]" ignora
+           espaços em branco iniciais e lê até o '\n' (máx 29 chars). */
+        printf("  Nome (até 29 caracteres, pode conter espacos): ");
+        if (scanf(" %29[^\n]", lista[i].nome) != 1) {
+            /* Caso improvável: garantir string vazia */
+            lista[i].nome[0] = '\0';
+        }
+
+        /* Lê a cor do exército (uma palavra sem espaços é suficiente) */
+        printf("  Cor do exército (ex: vermelho, azul): ");
+        if (scanf(" %9s", lista[i].cor) != 1) {
+            lista[i].cor[0] = '\0';
+        }
+
+        /* Lê o número de tropas, validando entrada inteira >= 0 */
+        printf("  Numero de tropas (inteiro >= 0): ");
+        while (1) {
+            if (scanf("%d", &lista[i].tropas) == 1 && lista[i].tropas >= 0) {
+                /* entrada válida */
+                break;
+            } else {
+                /* entrada inválida: limpa buffer e pede novamente */
+                printf("    Entrada invalida. Digite um numero inteiro >= 0: ");
+                limpar_buffer_stdin();
+            }
+        }
+
+        printf("\n");
+        
+    }
+/* Exibição dos dados cadastrados: percorre o vetor e imprime com formatação clara */
+    printf("=== Territórios cadastrados ===\n");
+    for (int i = 0; i < NUM_TERRITORIOS; i++) {
+        printf("Territorio %d\n", i + 1);
+        printf("  Nome : %s\n", lista[i].nome);
+        printf("  Cor  : %s\n", lista[i].cor);
+        printf("  Tropas: %d\n", lista[i].tropas);
+        printf("---------------------------\n");
+    }
+
+    printf("Fim do programa.\n");
+    return 0;
+}
 
 // --- Protótipos das Funções ---
 // Declarações antecipadas de todas as funções que serão usadas no programa, organizadas por categoria.
